@@ -2,41 +2,60 @@ function theCars(make, year, plate) {
     this.make = make;
     this.year = year;
     this.plate = plate;
+    this.parked = false;
 }
-var tesla = new theCars('tesla', '2017', '1');
+var tesla = new theCars('tesla', 2017, '1');
+
+
 var collectionOfCars = [];
 var lot = [];
 var vehicles = ["tesla", "toyoda", "chevy", "ford", "honda"];
 var carYears = [2012, 2013, 2014, 2015, 2016];
 
-function makeCars(numberOfCars) {
-    for (i = 0; i < numberOfCars; i++) { 
-        var makeIndex = i%vehicles.length;
-		var make = vehicles[makeIndex];
-		var yearIndex = i%carYears.length;
-		var year = carYears[yearIndex];
-		collectionOfCars.push(new theCars(make, year, i));
+function buildCars(carnumber) {
+	var result = [];
+    for (var i = 0; i < carnumber; i++) {
+        var makeIndex = i % vehicles.length;
+        var make = vehicles[makeIndex];
+        var yearIndex = i % carYears.length;
+        var year = carYears[yearIndex];
+        var parked = false;
+        result.push(new theCars(make, year, i));
     }
-    console.log(collectionOfCars);
-    
+    return result;
 }
-makeCars(101);
-function getNextAvailableCar(){
-	var waitingCar = collectionOfCars.pop();
-	console.log(waitingCar);
-	return waitingCar;
+collectionOfCars = buildCars(100);
+console.log(collectionOfCars);
+
+function makeLot(spaces) {
+    this.spaces = spaces;
+    this.empty = false;
 }
-function parkCar(car){
- lot.push(car);
-} 
-var car = getNextAvailableCar();
-parkCar(car);
-console.log(lot)
-function parkingLotAttendant(){
-	if(lot > 10){
-		lot = 7;
-	}
+var parkingSpot = new makeLot(1);
+console.log(parkingSpot)
+
+function parkTheCar(theCars, spaces, carIndex, spaceIndex) {
+    theCars.parked = true;
+    spaces.empty = false;
+    collectionOfCars.shift(carIndex, 1);
+    lot.push(theCars);
+
 }
-parkingLotAttendant();
+
+var collectionOfParkingSpaces = [];
+for (var i = 0; i < 10; i++) {
+    collectionOfParkingSpaces.push(new makeLot(i));
 
 
+}
+console.log(collectionOfParkingSpaces);
+
+for (i = 0; i < collectionOfCars.length; i++) {
+    for (j = 0; j < collectionOfParkingSpaces.length; j++) {
+        if (collectionOfCars[i].parked === false && collectionOfParkingSpaces[j].empty === true) {
+            parkTheCar(collectionOfCars[i], collectionOfParkingSpaces[j], i, j);
+
+
+        }
+    }
+}
