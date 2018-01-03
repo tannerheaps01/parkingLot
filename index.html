@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>parking lot</title>
+</head>
+<body>
+	<script type="text/javascript">
+		//make car
+		function car(make, year, plate){
+			this.make = make;
+			this.year = year;
+			this.plate = plate;
+			this.parked = false;
+		}
+
+		// make a vehicle
+		var vehicle = new car("ford", 2017, "1");
+
+		// make a group of cars to park
+		var unparkedCars = [];
+		var parkedCars = [];
+		var vehicleMakes = ["Ford","Chevy","Tesla","jeep","toyoda"];
+		var vehicleYears = [2018, 2017, 2016, 2015, 2014];
+		for(var i = 0; i < 100; i++){
+			var makeIndex = 1 % vehicleMakes.length;
+			var make = vehicleMakes[makeIndex];
+			var yearIndex = i % vehicleYears.length;
+			var year = vehicleYears[yearIndex];
+			var parked = false;
+			unparkedCars.push(new car(make, year, i));
+
+		}
+		console.log(unparkedCars);
+
+		//create a parking space
+		function parkingLot(id){
+			this.id = id;
+			this.vacant = true;
+			this.car = null;
+
+		}
+		var parkingSpot = new parkingLot(1);
+
+		//console.log(parkingSpot);
+
+		function parkACar(){
+			//chack for cars that need to park 
+			// check if there are spaces
+			//if cars both are true do both
+
+			if(unparkedCars.length > 0 && emptySpaces.length > 0){
+				var car = unparkedCars.shift();
+				var space = emptySpaces.shift();
+				//park the car
+				car.parked = true;
+				//used space
+				space.vacant = false;
+				space.car = car;
+				//taking taking the car out of collection of cars array
+
+				//putting  car into collection of parked cars
+
+				parkedCars.push(car);
+				emptySpaces.push(space);
+
+				console.log("Car" + car.plate + "(" + car.make + " - " + car.year + ") is parked in space" + space.id);
+				howLongTheCarStays(car, space);
+			}
+		}
+		// make a collection of spaces
+		var emptySpaces = [];
+		var fullSpaces = [];
+
+
+
+
+
+	for(var i = 0; i < 10; i++){
+		emptySpaces.push(new parkingLot(i));
+	}
+
+	function howLongTheCarStays(car, space){
+		var seconds = getRandomArbitrary(1000,5000);
+		setTimeout(function(){
+			car.parked = false;
+			space.parked = true;
+			space.car = null;
+
+			var carIndex = parkedCars.indexOf(car);
+			parkedCars.splice(carIndex, 1);
+
+			var spaceIndex = emptySpaces.indexOf(space);
+			emptySpaces.splice(spaceIndex, 1);
+			emptySpaces.push(space);
+
+			console.log("% Car" + car.plate + "(" + car.make + " - " + car.year + ") is leaving space" + space.id + "after" + seconds + "milliseconds." , 'color: green; font-weight: bold;');
+		},seconds);
+	}
+	var intervalId = setInterval(function(){
+		parkACar();
+
+		if (unparkedCars.length == 0) {
+			clearInterval(intervalId);
+			console.log("There are no more cars to park!");
+		}
+	}, 1000);
+
+	function getRandomArbitrary(min, max) {
+
+		return Math.random() * (max - min) + min;
+
+	}
+
+
+
+	</script>
+	
+</body>
+</html>
